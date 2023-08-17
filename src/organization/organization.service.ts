@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Organization from './organization.entity';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import CreateOrganizationDto from './createOrganization.dto';
 
 @Injectable()
@@ -12,8 +12,24 @@ export class OrganizationService {
   ) {}
 
   async createOrganization(organization: CreateOrganizationDto) {
-    const newOrganization = this.organizationRepository.create(organization);
-    await this.organizationRepository.save(newOrganization);
-    return newOrganization;
+    try {
+      const newOrganization = this.organizationRepository.create(organization);
+      await this.organizationRepository.save(newOrganization);
+      return newOrganization;
+    } catch (error) {
+      if (error instanceof QueryFailedError) {
+        if (error.driverError.code === '23505') {
+          throw new HttpException(
+            `Organization with name ${organization.name} already exists`,
+            HttpStatus.BAD_REQUEST,
+          );
+        } else {
+          throw new HttpException(
+            `Error: ${error.message}`,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      }
+    }
   }
 }
