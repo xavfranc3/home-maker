@@ -9,6 +9,7 @@ import { AddOrganizationUniqueName1692263709523 } from './migrations/16922637095
 import { AddNullableFieldsToAddress1692265879502 } from './migrations/1692265879502-AddNullableFieldsToAddress';
 import User from './src/user/user.entity';
 import { CreateUserModel1692267160796 } from './migrations/1692267160796-CreateUserModel';
+import { AddNullableFieldsToUser1692282950463 } from './migrations/1692282950463-AddNullableFieldsToUser';
 
 config();
 
@@ -27,5 +28,6 @@ export default new DataSource({
     AddOrganizationUniqueName1692263709523,
     AddNullableFieldsToAddress1692265879502,
     CreateUserModel1692267160796,
+    AddNullableFieldsToUser1692282950463,
   ],
 });
