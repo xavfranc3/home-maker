@@ -32,4 +32,21 @@ export class OrganizationService {
       }
     }
   }
+
+  async findOrganizationByName(name: string) {
+    const organization: Organization =
+      await this.organizationRepository.findOne({
+        where: {
+          name: name,
+        },
+      });
+    if (organization) {
+      return organization;
+    } else {
+      throw new HttpException(
+        `Organization with name ${name} does not exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
 }
