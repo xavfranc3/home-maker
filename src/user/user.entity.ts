@@ -25,6 +25,9 @@ class User {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  refreshToken: string;
+
   @ManyToOne(
     () => Organization,
     (organization: Organization) => organization.users,
@@ -35,6 +38,13 @@ class User {
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  @BeforeInsert()
+  async hashRefreshToken() {
+    if (this.refreshToken) {
+      this.refreshToken = await bcrypt.hash(this.refreshToken, 10);
+    }
   }
 }
 

@@ -14,16 +14,21 @@ export class UserService {
   ) {}
 
   async createUser(userData: CreateUserDto) {
-    const userOrganization =
-      await this.organizationService.findOrganizationByName(
-        userData.organizationName,
-      );
-    const newUser = this.usersRepository.create({
-      ...userData,
-      organization: userOrganization,
-    });
-    await this.usersRepository.save(newUser);
-    return newUser;
+    try {
+      const userOrganization =
+        await this.organizationService.findOrganizationByName(
+          userData.organizationName,
+        );
+      const newUser = this.usersRepository.create({
+        ...userData,
+        organization: userOrganization,
+      });
+      await this.usersRepository.save(newUser);
+
+      return newUser;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async getUserByEmail(email: string) {
@@ -40,5 +45,22 @@ export class UserService {
         HttpStatus.NOT_FOUND,
       );
     }
+  }
+
+  async getUserById(id: number) {
+    const user = await this.usersRepository.findOne({ where: { id: id } });
+    if (user) {
+      return user;
+    }
+    throw new HttpException(
+      'User with this id does not exist',
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+    await this.usersRepository.update(userId, {
+      refreshToken,
+    });
   }
 }

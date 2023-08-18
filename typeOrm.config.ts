@@ -10,6 +10,8 @@ import { AddNullableFieldsToAddress1692265879502 } from './migrations/1692265879
 import User from './src/user/user.entity';
 import { CreateUserModel1692267160796 } from './migrations/1692267160796-CreateUserModel';
 import { AddNullableFieldsToUser1692282950463 } from './migrations/1692282950463-AddNullableFieldsToUser';
+import { AddRefreshTokenToUser1692292238052 } from './migrations/1692292238052-AddRefreshTokenToUser';
+import { AddNullableRefreshTokenToUser1692292402575 } from './migrations/1692292402575-AddNullableRefreshTokenToUser';
 
 config();
 
@@ -29,5 +31,7 @@ export default new DataSource({
     AddNullableFieldsToAddress1692265879502,
     CreateUserModel1692267160796,
     AddNullableFieldsToUser1692282950463,
+    AddRefreshTokenToUser1692292238052,
+    AddNullableRefreshTokenToUser1692292402575,
   ],
 });
