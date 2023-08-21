@@ -12,6 +12,9 @@ class Address {
   address: string;
 
   @Column({ nullable: true })
+  street: string;
+
+  @Column({ nullable: true })
   postalCode: string;
 
   @Column()

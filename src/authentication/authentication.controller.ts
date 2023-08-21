@@ -48,7 +48,6 @@ export class AuthenticationController {
       accessTokenCookie,
       refreshTokenCookie.cookie,
     ]);
-    user.password = undefined;
     return user;
   }
 
@@ -66,7 +65,6 @@ export class AuthenticationController {
   @Get()
   authenticate(@Req() request: RequestWithUser) {
     const user = request.user;
-    user.password = undefined;
     return user;
   }
 }

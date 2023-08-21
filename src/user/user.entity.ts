@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import Organization from '../organization/organization.entity';
 import * as bcrypt from 'bcrypt';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 class User {
@@ -23,6 +24,7 @@ class User {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({ nullable: true })
