@@ -17,7 +17,6 @@ export class AuthenticationService {
   async registerUser(registrationData: CreateUserDto) {
     try {
       const createdUser = await this.userService.createUser(registrationData);
-      createdUser.password = undefined;
       return createdUser;
     } catch (error) {
       if (error instanceof QueryFailedError) {
@@ -39,7 +38,6 @@ export class AuthenticationService {
     try {
       const user = await this.userService.getUserByEmail(email);
       await this.verifyPassword(password, user.password);
-      user.password = undefined;
       return user;
     } catch (error) {
       throw new HttpException(

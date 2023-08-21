@@ -1,17 +1,6 @@
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
-import Organization from './src/organization/organization.entity';
-import { CreateOrganization1692200562640 } from './migrations/1692200562640-CreateOrganization';
-import Address from './src/address/address.entity';
-import { CreateAddress1692203653449 } from './migrations/1692203653449-CreateAddress';
-import { AddOrganizationUniqueName1692263709523 } from './migrations/1692263709523-AddOrganizationUniqueName';
-import { AddNullableFieldsToAddress1692265879502 } from './migrations/1692265879502-AddNullableFieldsToAddress';
-import User from './src/user/user.entity';
-import { CreateUserModel1692267160796 } from './migrations/1692267160796-CreateUserModel';
-import { AddNullableFieldsToUser1692282950463 } from './migrations/1692282950463-AddNullableFieldsToUser';
-import { AddRefreshTokenToUser1692292238052 } from './migrations/1692292238052-AddRefreshTokenToUser';
-import { AddNullableRefreshTokenToUser1692292402575 } from './migrations/1692292402575-AddNullableRefreshTokenToUser';
 
 config();
 
@@ -23,15 +12,6 @@ export default new DataSource({
   username: configService.get('POSTGRES_USER'),
   password: configService.get('POSTGRES_PASSWORD'),
   database: configService.get('POSTGRES_DB'),
-  entities: [Organization, Address, User],
-  migrations: [
-    CreateOrganization1692200562640,
-    CreateAddress1692203653449,
-    AddOrganizationUniqueName1692263709523,
-    AddNullableFieldsToAddress1692265879502,
-    CreateUserModel1692267160796,
-    AddNullableFieldsToUser1692282950463,
-    AddRefreshTokenToUser1692292238052,
-    AddNullableRefreshTokenToUser1692292402575,
-  ],
+  entities: [__dirname + '/src/../**/*.entity{.ts, .js}'],
+  migrations: [__dirname + '/migrations/*{.ts, .js}'],
 });
