@@ -14,10 +14,16 @@ export class AuthenticationService {
     private readonly configService: ConfigService,
   ) {}
 
+  getCookiesForLogOut() {
+    return [
+      'Authentication=; HttpOnly; Path=/; Max-Age=0',
+      'Refresh=; HttpOnly; Path=/; Max-Age=0',
+    ];
+  }
+
   async registerUser(registrationData: CreateUserDto) {
     try {
-      const createdUser = await this.userService.createUser(registrationData);
-      return createdUser;
+      return await this.userService.createUser(registrationData);
     } catch (error) {
       if (error instanceof QueryFailedError) {
         if (error.driverError.code === '23505')
@@ -83,9 +89,6 @@ export class AuthenticationService {
     const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
       'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
     )}`;
-    return {
-      cookie,
-      token,
-    };
+    return { token, cookie };
   }
 }
