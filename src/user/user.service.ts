@@ -63,4 +63,16 @@ export class UserService {
       refreshToken,
     });
   }
+
+  async getUserWithValidRefreshToken(refreshToken: string, userId: number) {
+    const user = await this.getUserById(userId);
+
+    const isRefreshTokenMatching = refreshToken === user.refreshToken;
+
+    if (isRefreshTokenMatching) return user;
+  }
+
+  async removeRefreshToken(userId: number) {
+    return this.usersRepository.update(userId, { refreshToken: null });
+  }
 }

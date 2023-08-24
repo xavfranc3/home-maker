@@ -5,16 +5,15 @@ import {
   UseGuards,
   Req,
   Body,
-  Res,
   Get,
 } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { LocalAuthenticationGuard } from './localAuthentication.guard';
 import RequestWithUser from './requestWithUser.interface';
 import CreateUserDto from '../user/dto/createUser.dto';
-import { Response } from 'express';
-import JwtAuthenticationGuard from './jwtAuthenitcation.guard';
+import JwtAuthenticationGuard from './jwtAuthentication.guard';
 import { UserService } from '../user/user.service';
+import JwtRefreshTokenGuard from './jwtRefreshToken.guard';
 
 @Controller('authentication')
 export class AuthenticationController {
@@ -52,19 +51,29 @@ export class AuthenticationController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Post('log-out')
-  async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
-    response.setHeader(
-      'Set-Cookie',
-      this.authenticationService.getCookieForLogOut(),
+  @Get()
+  authenticate(@Req() request: RequestWithUser) {
+    return request.user;
+  }
+
+  @UseGuards(JwtRefreshTokenGuard)
+  @Get('refresh')
+  refresh(@Req() request: RequestWithUser) {
+    const accessCookie = this.authenticationService.getCookieWithJwtToken(
+      request.user.id,
     );
-    return response.sendStatus(200);
+    request.res.setHeader('Set-Cookie', accessCookie);
+    return request.user;
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Get()
-  authenticate(@Req() request: RequestWithUser) {
-    const user = request.user;
-    return user;
+  @Post('log-out')
+  @HttpCode(200)
+  async logOut(@Req() request: RequestWithUser) {
+    await this.userService.removeRefreshToken(request.user.id);
+    request.res.setHeader(
+      'Set-Cookie',
+      this.authenticationService.getCookiesForLogOut(),
+    );
   }
 }
