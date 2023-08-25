@@ -4,6 +4,7 @@ import User from './user.entity';
 import { Repository } from 'typeorm';
 import CreateUserDto from './dto/createUser.dto';
 import { OrganizationService } from '../organization/organization.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -67,7 +68,10 @@ export class UserService {
   async getUserWithValidRefreshToken(refreshToken: string, userId: number) {
     const user = await this.getUserById(userId);
 
-    const isRefreshTokenMatching = refreshToken === user.refreshToken;
+    const isRefreshTokenMatching = bcrypt.compare(
+      refreshToken,
+      user.refreshToken,
+    );
 
     if (isRefreshTokenMatching) return user;
   }

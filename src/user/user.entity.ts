@@ -1,5 +1,6 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   ManyToOne,
@@ -28,6 +29,7 @@ class User {
   password: string;
 
   @Column({ nullable: true })
+  @Exclude()
   refreshToken: string;
 
   @ManyToOne(
@@ -42,7 +44,7 @@ class User {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  @BeforeInsert()
+  @BeforeUpdate()
   async hashRefreshToken() {
     if (this.refreshToken) {
       this.refreshToken = await bcrypt.hash(this.refreshToken, 10);
