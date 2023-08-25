@@ -29,6 +29,7 @@ class User {
   password: string;
 
   @Column({ nullable: true })
+  @Exclude()
   refreshToken: string;
 
   @ManyToOne(
